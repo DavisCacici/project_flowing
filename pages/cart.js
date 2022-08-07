@@ -1,7 +1,7 @@
 import styles from '../styles/Home.module.css';
 import { useState, useEffect} from 'react';
 import axios from 'axios';
-import { Col, Button, Row, Card, Divider } from 'antd';
+import { Col, Button, Row, Card, Divider, notification } from 'antd';
 import NavBar from '../components/NavBar';
 const { Meta } = Card;
 
@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() =>{
       axios.get('/api/listcart')
       .then(response =>{ 
-        setArticles(response.data);   
+        setArticles(response.data); 
         let subtotal = 0;  
         response.data.forEach(element => {
           subtotal = subtotal + (element.article.price * element.quantity);          
@@ -57,6 +57,21 @@ export default function Home() {
       }
     }
   }
+
+  const Checkout = async () => {
+    try{
+      let response = await axios.post('/api/checkout');
+      notification.open({
+        message: 'Notifica Carrello',
+        description: response.data
+      });
+      flag ? setFlag(false) : setFlag(true);
+    }
+    catch(error) { 
+      console.log(error);
+    }
+    
+  }
   
 
   return (
@@ -96,7 +111,7 @@ export default function Home() {
           </Col>
         </Row>
         <Divider orientation="left"></Divider>
-        <Button type="primary" block>
+        <Button type="primary" block onClick={() => Checkout()}>
           Pagamento
         </Button>
     </div>

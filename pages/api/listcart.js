@@ -6,20 +6,18 @@ export default async function handler(req, res) {
         
         let order = await Orders.findOne({status: 'Aperto'}).exec();
         let articles = [];
-
-        for(let i=0; i < order.items.length; i++)
+        if(order)
         {
-            let product = await Articles.findById(order.items[i].article);
-            articles.push({quantity: order.items[i].quantity, article: product, itemsID: order.items[i]._id});
+            for(let i=0; i < order.items.length; i++)
+            {
+                let product = await Articles.findById(order.items[i].article);
+                articles.push({quantity: order.items[i].quantity, article: product, itemsID: order.items[i]._id});
+            }
+    
         }
-
+        
         return res.json(articles); 
     }
     return res.status(405).json({ err: 'Method not allowed' });
 
-}
-
-const takeArticles = (order) => {
-    
-    return articles;
 }
