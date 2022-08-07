@@ -1,23 +1,28 @@
-import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { useState, useEffect} from 'react';
 import axios from 'axios';
-import { Col, Button, Row, Card } from 'antd';
+import { Col, Button, Row, Card, Divider } from 'antd';
 import NavBar from '../components/NavBar';
 const { Meta } = Card;
 
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [flag, setFlag] = useState(false);
+  const [total, setTotal] = useState(0);
 
   useEffect(() =>{
       axios.get('/api/listcart')
       .then(response =>{ 
-        console.log(response.data);
-        setArticles(response.data);
+        setArticles(response.data);   
+        let subtotal = 0;  
+        response.data.forEach(element => {
+          subtotal = subtotal + (element.article.price * element.quantity);          
+        });
+        setTotal(subtotal);
       })
       .catch(error => console.error(error));
+    
+    
   }, [flag]);
 
 
@@ -62,6 +67,7 @@ export default function Home() {
               return (
                 
                 <Col span={6} style={{ }} key={items.itemsID} >
+                    
                     <Card>
                         <Meta
                           title={items.article.name}
@@ -83,8 +89,15 @@ export default function Home() {
               );
           }) : <h1>Non ci sono articoli momentaneamente</h1>}
         </Row>
+        <Divider orientation="left"></Divider>
+        <Row>
+          <Col span={8}>
+            <h3>Totale: ${total}</h3>
+          </Col>
+        </Row>
+        <Divider orientation="left"></Divider>
         <Button type="primary" block>
-          Checkout
+          Pagamento
         </Button>
     </div>
   )

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { useState, useEffect} from 'react';
 import axios from 'axios';
-import { Col, Button, Row, Card } from 'antd';
+import { Col, Button, Row, Card, notification } from 'antd';
 const { Meta } = Card;
 import NavBar from '../components/NavBar';
 
@@ -14,16 +14,20 @@ export default function Home() {
       axios.get('/api/listarticles')
       .then(response =>{ 
         setArticles(response.data);
-        console.log(response.data[0]);
       })
       .catch(error => console.error(error));
   }, []);
   
   const AddToCart = async (article) => {
-    // console.log(article);
     try{
       const resp = await axios.post('/api/add_to_cart', {article});
-      console.log(resp);
+      if(resp.status === 200)
+      {
+        notification.open({
+          message: 'Notifica Carrello',
+          description: 'Aggiunto articolo ' + article.name + ' al carrello'
+        });
+      }
     }catch(error)
     {
       console.log(error);
@@ -45,7 +49,7 @@ export default function Home() {
                       description={article.description}
                     />
                     <h3>${article.price}</h3>
-                    <Button type="primary" onClick={() => AddToCart(article)}>Add to cart</Button>
+                    <Button type="primary" onClick={() => AddToCart(article)}>Aggiungi al carrello</Button>
                     </Card>
                     
                   </Col>
