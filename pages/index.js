@@ -21,6 +21,7 @@ export default function Home() {
   const AddToCart = async (article) => {
     try{
       const resp = await axios.post('/api/add_to_cart', {article});
+      console.log(resp);
       if(resp.status === 200)
       {
         notification.open({

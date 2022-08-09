@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const main = require('../lib/connect');
+const main = require('./connect');
 const { Schema, model } = mongoose;
 
 const OrderSchema = new Schema({
@@ -12,7 +12,7 @@ const OrderSchema = new Schema({
         },
         article: {
             type: Schema.Types.ObjectId,
-            ref: "articles"
+            ref: "Articles"
         }
         
     }]

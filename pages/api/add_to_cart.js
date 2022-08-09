@@ -11,17 +11,24 @@ export default async function handler(req, res) {
         {
             try{
                 let flag = false;
-
-                for(let i=0; i < order.items.length; i++)
+                // if there are element in the cart
+                if(order.items.length != 0)
                 {
-                    if(String(order.items[i].article) === req.body.article._id) {
-                        flag = false;
-                        order.items[i].quantity++;
-                        break;
+                    for(let i=0; i < order.items.length; i++)
+                    {
+                        if(String(order.items[i].article) === req.body.article._id) {
+                            flag = false;
+                            order.items[i].quantity++;
+                            break;
+                        }
+                        else flag = true;
                     }
-                    else flag = true;
+                    if(flag) order.items.push({quantity: 1, article: mongoose.Types.ObjectId.createFromHexString(req.body.article._id)});
+                }// if there aren't element in the cart
+                else{
+                    order.items.push({quantity: 1, article: mongoose.Types.ObjectId.createFromHexString(req.body.article._id)});
                 }
-                if(flag) order.items.push({quantity: 1, article: mongoose.Types.ObjectId.createFromHexString(req.body.article._id)});
+               
                 await order.save();
             }
             catch(error)
