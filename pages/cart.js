@@ -11,6 +11,7 @@ export default function Home() {
   const [total, setTotal] = useState(0);
 
   useEffect(() =>{
+    console.log(process.env.MONGO_URL);
       axios.get('/api/listcart')
       .then(response =>{ 
         setArticles(response.data); 
