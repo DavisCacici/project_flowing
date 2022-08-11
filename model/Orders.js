@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const main = require('./connect');
 const { Schema, model } = mongoose;
 
 const OrderSchema = new Schema({

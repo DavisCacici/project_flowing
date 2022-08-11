@@ -1,6 +1,8 @@
 import supertest from 'supertest';
 import { pushed } from '../pages/api/add_to_cart';
 const Orders = require('../model/Orders');
+import { env } from 'process';
+env.MONGO_URL = 'mongodb+srv://root:4KVHxwxs@cluster0.uweut.mongodb.net/ProjectFlowing';
 
 const app = 'http://localhost:3000';
 
@@ -18,11 +20,11 @@ const orderPayload = {
 };
 
 describe('add_to_cart', () => {
-    // beforeAll(async () => {
-    //   // main();
-    //   const mongoose = require('mongoose');
-    //   await mongoose.connect(process.env.MONGO_URL);
-    // });
+    beforeAll(async () => {
+      // main();
+      const mongoose = require('mongoose');
+      await mongoose.connect(env.MONGO_URL);
+    });
     
     // afterAll(async () => {
     //   await mongoose.disconnect();

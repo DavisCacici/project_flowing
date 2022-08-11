@@ -82,7 +82,7 @@ export default function Home() {
           {articles.length != 0 ? articles.map(items => {
               return (
                 
-                <Col span={6} style={{ }} key={items._id} >
+                <Col span={6} style={{ margin: '3%' }} key={items._id} >
                     
                   <Card>
                       <Meta
