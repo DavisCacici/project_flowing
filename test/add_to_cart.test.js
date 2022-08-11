@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom';
 import supertest from 'supertest';
+import { pushed } from '../pages/api/add_to_cart';
 const Orders = require('../model/Orders');
 
 const app = 'http://localhost:3000';
@@ -12,24 +12,22 @@ const articlesPayload = {
 };
 
 const orderPayload = {
-    status: 'Aperto',
-    items: [{
-        quantity: 1,
-        article: articlesPayload
-    }],
+  quantity: 1,
+  article: articlesPayload._id
+   
 };
 
 describe('add_to_cart', () => {
     // beforeAll(async () => {
-    //     const mongoServer = await MongoMemoryServer.create();
+    //   // main();
+    //   const mongoose = require('mongoose');
+    //   await mongoose.connect(process.env.MONGO_URL);
+    // });
     
-    //     await mongoose.connect(mongoServer.getUri());
-    //   });
-    
-    //   afterAll(async () => {
-    //     await mongoose.disconnect();
-    //     await mongoose.connection.close();
-    //   });
+    // afterAll(async () => {
+    //   await mongoose.disconnect();
+    //   await mongoose.connection.close();
+    // });
 
   it('should return a 200', async () => {
     await supertest(app).post('/api/add_to_cart').expect(200);
@@ -39,10 +37,16 @@ describe('add_to_cart', () => {
     await supertest(app).get('/api/add_to_cart').expect(405);
   });
 
-  it('should return a 200 status and the articles', async() => {
-    const {body, statusCode} = await supertest(app).post('/api/add_to_cart').send({article: articlesPayload});
-    let order = await Orders.findOne({status: 'Aperto'});
-    expect(statusCode).toBe(200);
-    expect(body).toEqual(JSON.stringify(order));
+  it('should return a Order with one more article ', async() => {
+    let order = await Orders.findOne({status: 'Test'});
+    let newOrder = pushed(order, articlesPayload._id);
+    let result = JSON.parse(JSON.stringify(newOrder));
+    expect({article: result.items[0].article, quantity: result.items[0].quantity}).toEqual(orderPayload);
   });
+
+  // it('should return a 200 status and the articles', async() => {
+  //   const {body, statusCode} = await supertest(app).post('/api/add_to_cart').send({article: articlesPayload});
+  //   expect(statusCode).toBe(200);
+  //   expect(body).toEqual(order);
+  // });
 })

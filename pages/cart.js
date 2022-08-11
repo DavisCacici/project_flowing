@@ -11,9 +11,9 @@ export default function Home() {
   const [total, setTotal] = useState(0);
 
   useEffect(() =>{
-    console.log(process.env.MONGO_URL);
       axios.get('/api/listcart')
       .then(response =>{ 
+        console.log(response.data);
         setArticles(response.data); 
         let subtotal = 0;  
         response.data.forEach(element => {
@@ -82,24 +82,22 @@ export default function Home() {
           {articles.length != 0 ? articles.map(items => {
               return (
                 
-                <Col span={6} style={{ }} key={items.itemsID} >
+                <Col span={6} style={{ }} key={items._id} >
                     
-                    <Card>
-                        <Meta
-                          title={items.article.name}
-                          description={items.article.description}
-                        />
-                        <h3>${items.article.price}</h3>
-                        <Row>                        
-                          <Button type='dashed' onClick={() => PlusOrMinus(items.itemsID, 'minus')} >-</Button>
-                         
-                          <p style={{ margin: '5px' }}> {items.quantity} </p>
+                  <Card>
+                      <Meta
+                        title={items.article.name}
+                        description={items.article.description}
+                      />
+                      <h3>${items.article.price}</h3>
+                      <Row>                        
+                        <Button type='dashed' onClick={() => PlusOrMinus(items._id, 'minus')} >-</Button>
+                        
+                        <p style={{ margin: '5px' }}> {items.quantity} </p>
 
-                          <Button type='dashed' onClick={() => PlusOrMinus(items.itemsID, 'plus')} >+</Button>                          
-                        </Row>
-                        
-                        
-                    </Card>
+                        <Button type='dashed' onClick={() => PlusOrMinus(items._id, 'plus')} >+</Button>                          
+                      </Row>
+                  </Card>
                 
                 </Col>
               );

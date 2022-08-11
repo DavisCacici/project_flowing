@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import supertest from 'supertest';
 
 const app = 'http://localhost:3000';

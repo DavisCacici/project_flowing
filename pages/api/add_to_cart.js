@@ -1,11 +1,10 @@
-const Articles = require('../../model/Articles');
 const Orders = require('../../model/Orders');
 const mongoose = require('mongoose');
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         // Seek a order with status 'Open'
-        let order = await Orders.findOne({status: 'Aperto'}).exec();
+        let order = await Orders.findOne({status: 'Aperto'});
         // if exist update element inside
         if(order)
         {
@@ -23,10 +22,10 @@ export default async function handler(req, res) {
                         }
                         else flag = true;
                     }
-                    if(flag) order.items.push({quantity: 1, article: mongoose.Types.ObjectId.createFromHexString(req.body.article._id)});
+                    if(flag) order = pushed(order, req.body.article._id);
                 }// if there aren't element in the cart
                 else{
-                    order.items.push({quantity: 1, article: mongoose.Types.ObjectId.createFromHexString(req.body.article._id)});
+                    order = pushed(order, req.body.article._id);
                 }
                
                 await order.save();
@@ -54,4 +53,9 @@ export default async function handler(req, res) {
     }
     return res.status(405).json({ err: 'Method not allowed' });
 
+}
+
+export const pushed = (order, article_id) => {
+    order.items.push({quantity: 1, article: mongoose.Types.ObjectId.createFromHexString(article_id)});
+    return order;
 }
