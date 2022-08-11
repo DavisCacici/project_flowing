@@ -11,21 +11,29 @@ export default function Home() {
   const [total, setTotal] = useState(0);
 
   useEffect(() =>{
-      axios.get('/api/listcart')
-      .then(response =>{ 
-        console.log(response.data);
+    axios.get('/api/listcart')
+    .then(response =>{ 
+      if(response.data.length != 0)
+      {
         setArticles(response.data); 
         let subtotal = 0;  
         response.data.forEach(element => {
           subtotal = subtotal + (element.article.price * element.quantity);          
         });
         setTotal(subtotal);
-      })
-      .catch(error => console.error(error));
+
+      }
+      else{
+        setArticles([]);
+      }
+      
+    })
+    .catch(error => console.error(error));
     
     
   }, [flag]);
 
+ 
 
   const PlusOrMinus = async (itemsID, plus) => {
     if(plus === 'plus')
@@ -73,13 +81,13 @@ export default function Home() {
     }
     
   }
-  
+  console.log(articles.length);
 
   return (
     <div className={styles.container}>
       <NavBar />
         <Row className={styles.main} gutter={16}>
-          {articles.length != 0 ? articles.map(items => {
+          {articles.length > 0 ? articles.map(items => {
               return (
                 
                 <Col span={6} style={{ margin: '3%' }} key={items._id} >
